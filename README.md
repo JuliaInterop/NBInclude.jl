@@ -28,6 +28,10 @@ and nested inclusions can use paths relative to the notebook, just as for `inclu
 * Code is associated with accurate line numbers (e.g. for backtraces when exceptions are thrown), in the form of `myfile.ipynb:In[N]:M` for line `M` in input cell `N` of the `myfile.ipynb` notebook.  Un-numbered cells (e.g. unevaluated cells) are given a number
 `+N` for the `N`-th nonempty cell in the notebook.  You can use `nbinclude("myfile.ipynb", renumber=true)` to automatically renumber the cells in sequence (as if you had selected *Run All* from the Jupyter *Cell* menu), without altering the file.
 * The Julia `@__FILE__` macro returns `/path/to/myfile.ipynb:In[N]` for input cell `N`.
+* Like `include`, `nbinclude` works fine with parallel Julia processes, even for
+worker processes (from Julia's `addprocs`) that may not have filesystem access.
+(Do `import NBInclude; @everywhere using NBInclude` to use `nbinclude` on
+all processes.)
 * No Python or Jupyter dependency.
 
 To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.

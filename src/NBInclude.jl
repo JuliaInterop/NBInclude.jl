@@ -65,7 +65,16 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
     # for precompilation, invalidate the cache if the notebook changes:
     include_dependency(path)
 
-    nb = open(JSON.parse, path, "r")
+    # similar to base/loading.jl, handle nbinclude calls from worker
+    # nodes that may not have filesystem access by fetching the file
+    # contents from node 1.
+    nb = if myid() == 1
+        # sleep a bit to process file requests from other nodes
+        nprocs()>1 && sleep(0.005)
+        open(JSON.parse, path, "r")
+    else
+        JSON.parse(remotecall_fetch(readall, 1, path))
+    end
 
     # check for an acceptable notebook:
     nb["nbformat"] == 4 || error("unrecognized notebook format ", nb["nbformat"])
