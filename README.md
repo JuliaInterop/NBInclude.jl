@@ -1,6 +1,7 @@
 # NBInclude
 
 [![Build Status](https://travis-ci.org/stevengj/NBInclude.jl.svg?branch=master)](https://travis-ci.org/stevengj/NBInclude.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/8kixdblpw5oi8nd3?svg=true)](https://ci.appveyor.com/project/StevenGJohnson/nbinclude-jl)
 
 NBInclude is a package for the Julia language which allows you to
 include and execute Julia-language Jupyter (IJulia) notebook files
