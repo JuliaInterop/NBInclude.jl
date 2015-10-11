@@ -1,4 +1,4 @@
-using Base.Test
+using Base.Test, Compat
 
 addprocs(1)
 
