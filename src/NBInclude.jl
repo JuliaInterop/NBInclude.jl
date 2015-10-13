@@ -81,6 +81,8 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
     lang = lowercase(nb["metadata"]["language_info"]["name"])
     lang == "julia" || error("notebook is for unregognized language $lang")
 
+    shell_or_help = r"^\s*[;?]" # pattern for shell command or help
+
     ret = nothing
     counter = 0 # keep our own cell counter to handle un-executed notebooks.
     for cell in nb["cells"]
@@ -88,6 +90,7 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
             s = join(cell["source"])
             isempty(strip(s)) && continue # Jupyter doesn't number empty cells
             counter += 1
+            ismatch(shell_or_help, s) && continue
             cellnum = renumber ? string(counter) :
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])

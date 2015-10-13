@@ -24,6 +24,7 @@ and nested inclusions can use paths relative to the notebook, just as for `inclu
 worker processes (from Julia's [`addprocs`](http://docs.julialang.org/en/latest/stdlib/parallel/#Base.addprocs)) that may not have filesystem access.
 (Do `import NBInclude; @everywhere using NBInclude` to use `nbinclude` on
 all processes.)
+* In IJulia, cells beginning with `;` or `?` are interpreted as shell commands or help requests, respectively.  Such cells are ignored by `nbinclude`.
 * No Python or Jupyter dependency.
 
 To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.
