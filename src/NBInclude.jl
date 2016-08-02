@@ -73,7 +73,7 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
         nprocs()>1 && sleep(0.005)
         open(JSON.parse, path, "r")
     else
-        JSON.parse(remotecall_fetch(readall, 1, path))
+        JSON.parse(remotecall_fetch(readstring, 1, path))
     end
 
     # check for an acceptable notebook:
