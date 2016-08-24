@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/stevengj/NBInclude.jl.svg?branch=master)](https://travis-ci.org/stevengj/NBInclude.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/8kixdblpw5oi8nd3?svg=true)](https://ci.appveyor.com/project/StevenGJohnson/nbinclude-jl)
 
-NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.  That is, analogous to doing [`include`](http://docs.julialang.org/en/latest/stdlib/base/#Base.include)`("myfile.jl")` in Julia to execute `myfile.jl`, you can do
+NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.  That is, analogous to doing [`include("myfile.jl")`](http://docs.julialang.org/en/latest/stdlib/base/#Base.include) in Julia to execute `myfile.jl`, you can do
 ```jl
 using NBInclude
 nbinclude("myfile.ipynb")
