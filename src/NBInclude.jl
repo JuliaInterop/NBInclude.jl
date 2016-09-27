@@ -57,7 +57,8 @@ it is assigned a number `+N` for the `N`-th nonempty cell.  If `renumber`
 is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
 """
-function nbinclude(path::AbstractString; renumber::Bool=false)
+function nbinclude(path::AbstractString; renumber::Bool=false,
+                                         execute_cell=(cell, counter)->true)
     # act like include(path), in that path is relative to current file:
     prev = Base.source_path(nothing)
     path = (prev == nothing) ? abspath(path) : joinpath(dirname(prev),path)
@@ -91,6 +92,7 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
             isempty(strip(s)) && continue # Jupyter doesn't number empty cells
             counter += 1
             ismatch(shell_or_help, s) && continue
+            execute_cell(cell, counter) || continue
             cellnum = renumber ? string(counter) :
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
