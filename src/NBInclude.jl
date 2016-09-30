@@ -58,9 +58,9 @@ is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
 """
 function nbinclude(path::AbstractString; renumber::Bool=false,
-                                         counters::Union{Vector{Int},Void} = nothing,
-                                         cellnums::Union{Vector{String},Void} = nothing,
-                                         regexp::Union{Regex,Void} = nothing)
+                                         counters = nothing,
+                                         cellnums = nothing,
+                                         regexp = nothing)
     # act like include(path), in that path is relative to current file:
     prev = Base.source_path(nothing)
     path = (prev == nothing) ? abspath(path) : joinpath(dirname(prev),path)
