@@ -58,7 +58,9 @@ is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
 """
 function nbinclude(path::AbstractString; renumber::Bool=false,
-                                         execute_cell=(cell, counter)->true)
+                                         counters::Union{Vector{Int},Void} = nothing,
+                                         cellnums::Union{Vector{String},Void} = nothing,
+                                         regexp::Union{Regex,Void} = nothing)
     # act like include(path), in that path is relative to current file:
     prev = Base.source_path(nothing)
     path = (prev == nothing) ? abspath(path) : joinpath(dirname(prev),path)
@@ -92,10 +94,12 @@ function nbinclude(path::AbstractString; renumber::Bool=false,
             isempty(strip(s)) && continue # Jupyter doesn't number empty cells
             counter += 1
             ismatch(shell_or_help, s) && continue
-            execute_cell(cell, counter) || continue
             cellnum = renumber ? string(counter) :
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
+            counters!=nothing && counter ∉ counters && continue
+            cellnums!=nothing && cellnum ∉ cellnums && continue
+            regexp!=nothing && !ismatch(regexp, s) && continue
             ret = my_include_string(s, string(path, ":In[", cellnum, "]"), prev)
         end
     end
