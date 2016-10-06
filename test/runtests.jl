@@ -21,11 +21,5 @@ x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5])
 x=[]; nbinclude("test2.ipynb"; regexp=r"#.*executeme")
 @test x == [2, 4]
 
-x=[]; nbinclude("test2.ipynb"; cellnums = ["9", "10", "12"])
-@test x == [1, 2, 4]
-
 x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5], regexp=r"#.*executeme")
 @test x == [4]
-
-x=[]; nbinclude("test2.ipynb"; counters = [2, 1], regexp=r"exec", cellnums = ["9", "10"])
-@test x == [2]
