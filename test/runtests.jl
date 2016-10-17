@@ -18,8 +18,8 @@ x=[]; nbinclude("test2.ipynb")
 x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5])
 @test x == [1, 4, 5]
 
-x=[]; nbinclude("test2.ipynb"; regexp=r"#.*executeme")
+x=[]; nbinclude("test2.ipynb"; regex=r"#.*executeme")
 @test x == [2, 4]
 
-x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5], regexp=r"#.*executeme")
+x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5], regex=r"#.*executeme")
 @test x == [4]
