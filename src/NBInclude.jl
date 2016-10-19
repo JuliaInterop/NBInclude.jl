@@ -39,7 +39,7 @@ function my_include_string(s::AbstractString, path::AbstractString, prev)
 end
 
 """
-    nbinclude(path::AbstractString; renumber::Bool=false)
+    nbinclude(path::AbstractString; renumber::Bool=false, counters=1:typemax(Int), regex::Regex=r"")
 
 Include the IJulia Jupyter notebook at `path` and execute the code
 cells (in the order that they appear in the file), returning the
@@ -56,8 +56,19 @@ If the cell has no number (e.g. if it hasn't been evaluated yet), then
 it is assigned a number `+N` for the `N`-th nonempty cell.  If `renumber`
 is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
+
+`counters` and `regex` can be used to limit the execution of notebook cells.
+Only cells for which `counter ∈ counters` holds and the cell text matches `regex`
+are executed. E.g.
+
+    nbinclude("notebook.ipynb"; counters = 1:10, regexp=r"# *exec"i)
+
+would include cells 1 to 10 from "notebook.ipynb" that contain comments like
+`# exec` or `# ExecuteMe` in the cell text.
 """
-function nbinclude(path::AbstractString; renumber::Bool=false)
+function nbinclude(path::AbstractString; renumber::Bool=false,
+                                         counters = 1:typemax(Int),
+                                         regex::Regex = r"")
     # act like include(path), in that path is relative to current file:
     prev = Base.source_path(nothing)
     path = (prev == nothing) ? abspath(path) : joinpath(dirname(prev),path)
@@ -94,6 +105,7 @@ function nbinclude(path::AbstractString; renumber::Bool=false)
             cellnum = renumber ? string(counter) :
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
+            counter in counters && ismatch(regex, s) || continue
             ret = my_include_string(s, string(path, ":In[", cellnum, "]"), prev)
         end
     end
