@@ -58,14 +58,13 @@ is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
 
 `counters` and `regex` can be used to limit the execution of notebook cells.
-Only cells for which `counter ∈ counters` holds or the cell text matches `regex`
+Only cells for which `counter ∈ counters` holds and the cell text matches `regex`
 are executed. E.g.
 
-    nbinclude("notebook.ipynb"; counters = 1:3, regexp=r"# *exec"i)
+    nbinclude("notebook.ipynb"; counters = 1:10, regexp=r"# *exec"i)
 
-would include cells 1 to 3 from "notebook.ipynb" plus all the cells that contain
-comments like `# exec` or `# ExecuteMe` in the cell text.
-
+would include cells 1 to 10 from "notebook.ipynb" that contain comments like
+`# exec` or `# ExecuteMe` in the cell text.
 """
 function nbinclude(path::AbstractString; renumber::Bool=false,
                                          counters = 1:typemax(Int),
