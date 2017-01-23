@@ -57,11 +57,11 @@ it is assigned a number `+N` for the `N`-th nonempty cell.  If `renumber`
 is set to `true`, then the cell numbers saved in the notebook are ignored
 and each cell is assigned a consecutive number `N`.
 
-`counters` and `regex` can be used to limit the execution of notebook cells.
+`counters` and `regex` can be used to include only a subset of notebook cells.
 Only cells for which `counter ∈ counters` holds and the cell text matches `regex`
 are executed. E.g.
 
-    nbinclude("notebook.ipynb"; counters = 1:10, regexp=r"# *exec"i)
+    nbinclude("notebook.ipynb"; counters = 1:10, regex=r"# *exec"i)
 
 would include cells 1 to 10 from "notebook.ipynb" that contain comments like
 `# exec` or `# ExecuteMe` in the cell text.
