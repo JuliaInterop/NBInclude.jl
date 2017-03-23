@@ -25,7 +25,7 @@ worker processes (from Julia's [`addprocs`](http://docs.julialang.org/en/latest/
 (Do `import NBInclude; @everywhere using NBInclude` to use `nbinclude` on
 all processes.)
 * In IJulia, cells beginning with `;` or `?` are interpreted as shell commands or help requests, respectively.  Such cells are ignored by `nbinclude`.
-* `counters` and `regex` keywords can be used to include a subset of notebook cells to those for which `counter ∈ counters` and the cell text matches `regex`. For example, `nbinclude("notebook.ipynb"; counters=1:10, regex=r"#\s*EXECUTE")
+* `counters` and `regex` keywords can be used to include a subset of notebook cells to those for which `counter ∈ counters` and the cell text matches `regex`. For example, `nbinclude("notebook.ipynb"; counters=1:10, regex=r"#\s*EXECUTE")`
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
 * No Python or Jupyter dependency.
 
