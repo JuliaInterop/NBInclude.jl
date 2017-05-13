@@ -23,3 +23,6 @@ x=[]; nbinclude("test2.ipynb"; regex=r"#.*executeme")
 
 x=[]; nbinclude("test2.ipynb"; counters = [1, 4, 5], regex=r"#.*executeme")
 @test x == [4]
+
+z = 0; nbinclude("test2.ipynb"; anshook = x -> (global z += 1))
+@test z == 6
