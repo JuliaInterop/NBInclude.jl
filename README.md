@@ -27,6 +27,7 @@ all processes.)
 * In IJulia, cells beginning with `;` or `?` are interpreted as shell commands or help requests, respectively.  Such cells are ignored by `nbinclude`.
 * `counters` and `regex` keywords can be used to include a subset of notebook cells to those for which `counter ∈ counters` and the cell text matches `regex`. For example, `nbinclude("notebook.ipynb"; counters=1:10, regex=r"#\s*EXECUTE")`
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
+* A keyword `anshook` can be used to run a passed function on the return value of all the cells.
 * No Python or Jupyter dependency.
 
 To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.

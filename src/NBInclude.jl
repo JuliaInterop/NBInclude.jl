@@ -39,7 +39,7 @@ function my_include_string(s::AbstractString, path::AbstractString, prev)
 end
 
 """
-    nbinclude(path::AbstractString; renumber::Bool=false, counters=1:typemax(Int), regex::Regex=r"")
+    nbinclude(path::AbstractString; renumber::Bool=false, counters=1:typemax(Int), regex::Regex=r"", anshook = identity)
 
 Include the IJulia Jupyter notebook at `path` and execute the code
 cells (in the order that they appear in the file), returning the
@@ -65,10 +65,13 @@ are executed. E.g.
 
 would include cells 1 to 10 from "notebook.ipynb" that contain comments like
 `# exec` or `# ExecuteMe` in the cell text.
+
+`anshook` can be used to execute a function on all the values returned in the cells.
 """
 function nbinclude(path::AbstractString; renumber::Bool=false,
                                          counters = 1:typemax(Int),
-                                         regex::Regex = r"")
+                                         regex::Regex = r"",
+                                         anshook = identity)
     # act like include(path), in that path is relative to current file:
     prev = Base.source_path(nothing)
     path = (prev == nothing) ? abspath(path) : joinpath(dirname(prev),path)
@@ -107,6 +110,7 @@ function nbinclude(path::AbstractString; renumber::Bool=false,
                       string(cell["execution_count"])
             counter in counters && ismatch(regex, s) || continue
             ret = my_include_string(s, string(path, ":In[", cellnum, "]"), prev)
+            anshook(ret)
         end
     end
     return ret
