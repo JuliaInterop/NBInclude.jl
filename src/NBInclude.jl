@@ -96,7 +96,9 @@ function nbinclude(path::AbstractString; renumber::Bool=false,
     lang == "julia" || error("notebook is for unregognized language $lang")
 
     shell_or_help = r"^\s*[;?]" # pattern for shell command or help
-
+    ignore_marker = "nbi"
+    explicit_ignore = r"^\s#\s*\!$(ignore_marker)" # skip cell if it starts with "#!nbi"
+    
     ret = nothing
     counter = 0 # keep our own cell counter to handle un-executed notebooks.
     for cell in nb["cells"]
@@ -105,6 +107,8 @@ function nbinclude(path::AbstractString; renumber::Bool=false,
             isempty(strip(s)) && continue # Jupyter doesn't number empty cells
             counter += 1
             ismatch(shell_or_help, s) && continue
+            ismatch(explicit_ignore, s) && continue
+
             cellnum = renumber ? string(counter) :
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
