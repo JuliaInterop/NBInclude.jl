@@ -6,7 +6,7 @@
 NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.  That is, analogous to doing [`include("myfile.jl")`](http://docs.julialang.org/en/latest/stdlib/base/#Base.include) in Julia to execute `myfile.jl`, you can do
 ```jl
 using NBInclude
-nbinclude("myfile.ipynb")
+@nbinclude("myfile.ipynb")
 ```
 to execute all of the code cells in the IJulia notebook `myfile.ipynb`. Similar to `include`, the value of the last evaluated expression in the last evaluated code cell is returned.
 
@@ -18,14 +18,10 @@ Key features of NBInclude are:
 and nested inclusions can use paths relative to the notebook, just as for `include`.
 * In a module, included notebooks work fine with [precompilation](http://docs.julialang.org/en/latest/manual/modules/#module-initialization-and-precompilation) in Julia 0.4 (and re-compilation is automatically triggered if the notebook changes).
 * Code is associated with accurate line numbers (e.g. for backtraces when exceptions are thrown), in the form of `myfile.ipynb:In[N]:M` for line `M` in input cell `N` of the `myfile.ipynb` notebook.  Un-numbered cells (e.g. unevaluated cells) are given a number
-`+N` for the `N`-th nonempty cell in the notebook.  You can use `nbinclude("myfile.ipynb", renumber=true)` to automatically renumber the cells in sequence (as if you had selected *Run All* from the Jupyter *Cell* menu), without altering the file.
+`+N` for the `N`-th nonempty cell in the notebook.  You can use `@nbinclude("myfile.ipynb", renumber=true)` to automatically renumber the cells in sequence (as if you had selected *Run All* from the Jupyter *Cell* menu), without altering the file.
 * The Julia `@__FILE__` macro returns `/path/to/myfile.ipynb:In[N]` for input cell `N`.
-* Like `include`, `nbinclude` works fine with parallel Julia processes, even for
-worker processes (from Julia's [`addprocs`](http://docs.julialang.org/en/latest/stdlib/parallel/#Base.addprocs)) that may not have filesystem access.
-(Do `import NBInclude; @everywhere using NBInclude` to use `nbinclude` on
-all processes.)
-* In IJulia, cells beginning with `;` or `?` are interpreted as shell commands or help requests, respectively.  Such cells are ignored by `nbinclude`.
-* `counters` and `regex` keywords can be used to include a subset of notebook cells to those for which `counter ∈ counters` and the cell text matches `regex`. For example, `nbinclude("notebook.ipynb"; counters=1:10, regex=r"#\s*EXECUTE")`
+* In IJulia, cells beginning with `;` or `?` are interpreted as shell commands or help requests, respectively.  Such cells are ignored by `@nbinclude`.
+* `counters` and `regex` keywords can be used to include a subset of notebook cells to those for which `counter ∈ counters` and the cell text matches `regex`. For example, `@nbinclude("notebook.ipynb"; counters=1:10, regex=r"#\s*EXECUTE")`
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
 * A keyword `anshook` can be used to run a passed function on the return value of all the cells.
 * No Python or Jupyter dependency.

@@ -1,1 +1,1 @@
-nbinclude("test4.ipynb")
+@nbinclude("test4.ipynb")
