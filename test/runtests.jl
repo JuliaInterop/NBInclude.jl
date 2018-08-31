@@ -1,5 +1,6 @@
 using NBInclude, Compat, Compat.Test
 
+include(joinpath("includes", "scopetest.jl"))
 @test include(joinpath("includes", "test1.jl")) == 314159
 @test f(5) == 6
 @test normpath(myfile) == abspath("test.ipynb") * ":In[6]"
