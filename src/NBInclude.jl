@@ -13,7 +13,7 @@ the value of the last evaluated expression is returned.
 module NBInclude
 export nbinclude, @nbinclude
 
-using Compat, JSON
+using Compat, JSON, SoftGlobalScope
 
 """
     my_include_string(m::Module, s::AbstractString, path::AbstractString, prev)
@@ -24,11 +24,11 @@ of Julia here (see `base/loading.jl:include_relative`), but it hasn't
 changed from Julia 0.2 to Julia 0.7 so it's not too crazy.  `prev`
 should be the previous path returned by `Base.source_path`.
 """
-function my_include_string(m::Module, s::AbstractString, path::AbstractString, prev)
+function my_include_string(m::Module, s::AbstractString, path::AbstractString, prev, softscope)
     tls = task_local_storage()
     tls[:SOURCE_PATH] = path
     try
-        return include_string(m, s, path)
+        return softscope ? softscope_include_string(m, s, path) : include_string(m, s, path)
     finally
         if prev === nothing
             delete!(tls, :SOURCE_PATH)
@@ -48,7 +48,8 @@ function nbinclude(m::Module, path::AbstractString;
                    renumber::Bool=false,
                    counters = 1:typemax(Int),
                    regex::Regex = r"",
-                   anshook = identity)
+                   anshook = identity,
+                   softscope::Bool=false)
    # act like include(path), in that path is relative to current file:
    # for precompilation, invalidate the cache if the notebook changes:
     path, prev = @static if VERSION >= v"0.7.0-DEV.3483" # julia#25455
@@ -80,7 +81,7 @@ function nbinclude(m::Module, path::AbstractString;
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
             counter in counters && occursin(regex, s) || continue
-            ret = my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev)
+            ret = my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev, softscope)
             anshook(ret)
         end
     end
