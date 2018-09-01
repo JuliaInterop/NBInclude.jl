@@ -12,7 +12,7 @@ to execute all of the code cells in the IJulia notebook `myfile.ipynb`. Similar 
 
 The goal of this package is to make notebook files just as easy to incorporate into Julia programs as ordinary Julia (`.jl`) files, giving you the advantages of a notebook (integrated code, formatted text, equations, graphics, and other results) while retaining the modularity and re-usability of `.jl` files.
 
-Note: Scoping rules have changed between Julia 0.6 and Julia 1.0. Running a notebook as `@nbinclude(foo.ipynb, softscope=true)` will load notebooks as they work in the IJulia kernel (soft global scoping, or 0.6-style). That flag's default value, `false`, will load notebooks as they'd run in the Julia 1.0 REPL. 
+Note: Scoping rules have changed between Julia 0.6 and Julia 1.0. Running a notebook as `@nbinclude(foo.ipynb, softscope=true)` will load notebooks as they work for interactive use in the IJulia kernel ("soft" global scoping, or 0.6-style). That flag's default value, `false`, will load notebooks with the "hard" scoping rule of Julia 1.0 (e.g. in `include`); see the [SoftGlobalScope package](https://github.com/stevengj/SoftGlobalScope.jl) for more details.
 
 Key features of NBInclude are:
 
