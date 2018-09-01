@@ -1,6 +1,12 @@
 using NBInclude, Compat, Compat.Test
 
-VERSION >= v"1.0.0" ? include(joinpath("includes", "scopetest.jl")) : true
+
+@testset "Scoping Tests" begin
+    VERSION >= v"1.0.0" ? @test_throws LoadError @nbinclude(joinpath("includes", "scoping.ipynb"))
+    @nbinclude(joinpath("includes", "scoping.ipynb"); softscope = true)
+    @test a == 11
+end 
+
 @test include(joinpath("includes", "test1.jl")) == 314159
 @test f(5) == 6
 @test normpath(myfile) == abspath("test.ipynb") * ":In[6]"
