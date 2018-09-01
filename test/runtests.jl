@@ -2,7 +2,7 @@ using NBInclude, Compat, Compat.Test
 
 
 @testset "Scoping Tests" begin
-    VERSION >= v"1.0.0" ? @test_throws LoadError @nbinclude(joinpath("includes", "scoping.ipynb"))
+    VERSION >= v"1.0.0" ? @test_throws LoadError @nbinclude(joinpath("includes", "scoping.ipynb")) : true
     @nbinclude(joinpath("includes", "scoping.ipynb"); softscope = true)
     @test a == 11
 end 
