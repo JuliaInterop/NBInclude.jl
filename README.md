@@ -27,6 +27,7 @@ and nested inclusions can use paths relative to the notebook, just as for `inclu
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
 * A keyword `anshook` can be used to run a passed function on the return value of all the cells.
 * No Python or Jupyter dependency.
+* The `softscope` flag mentioned above. 
 
 To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.
 
