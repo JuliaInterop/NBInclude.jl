@@ -13,7 +13,7 @@ the value of the last evaluated expression is returned.
 module NBInclude
 export nbinclude, @nbinclude
 
-using Compat, JSON
+using JSON
 
 """
     my_include_string(m::Module, s::AbstractString, path::AbstractString, prev)

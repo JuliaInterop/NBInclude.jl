@@ -1,0 +1,16 @@
+name = "NBInclude"
+uuid = "0db19996-df87-5ea3-a455-e3a50d440464"
+version = "2.2.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
+[compat]
+julia = "1"
+JSON = "0.18,0.19,0.20,0.21"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

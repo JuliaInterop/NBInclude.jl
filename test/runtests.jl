@@ -1,4 +1,4 @@
-using NBInclude, Compat, Compat.Test
+using NBInclude, Test
 
 @test include(joinpath("includes", "test1.jl")) == 314159
 @test f(5) == 6
