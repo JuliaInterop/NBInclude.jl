@@ -13,22 +13,20 @@ the value of the last evaluated expression is returned.
 module NBInclude
 export nbinclude, @nbinclude
 
-using JSON
+using JSON, SoftGlobalScope
 
 """
-    my_include_string(m::Module, s::AbstractString, path::AbstractString, prev)
+    my_include_string(m::Module, s::AbstractString, path::AbstractString, prev, softscope)
 
-Like include_string, but also change the current source path just
-as `include(filename)` would do.   We are hacking undocumented internals
-of Julia here (see `base/loading.jl:include_relative`), but it hasn't
+Like include_string (or softscope_include_string, depending on the `softscope` flag), but also change the current source path just as `include(filename)` would do.   We are hacking undocumented internals of Julia here (see `base/loading.jl:include_relative`), but it hasn't
 changed from Julia 0.2 to Julia 0.7 so it's not too crazy.  `prev`
 should be the previous path returned by `Base.source_path`.
 """
-function my_include_string(m::Module, s::AbstractString, path::AbstractString, prev)
+function my_include_string(m::Module, s::AbstractString, path::AbstractString, prev, softscope)
     tls = task_local_storage()
     tls[:SOURCE_PATH] = path
     try
-        return include_string(m, s, path)
+        return softscope ? softscope_include_string(m, s, path) : include_string(m, s, path)
     finally
         if prev === nothing
             delete!(tls, :SOURCE_PATH)
@@ -48,7 +46,8 @@ function nbinclude(m::Module, path::AbstractString;
                    renumber::Bool=false,
                    counters = 1:typemax(Int),
                    regex::Regex = r"",
-                   anshook = identity)
+                   anshook = identity,
+                   softscope::Bool=false)
    # act like include(path), in that path is relative to current file:
    # for precompilation, invalidate the cache if the notebook changes:
     path, prev = @static if VERSION >= v"0.7.0-DEV.3483" # julia#25455
@@ -80,7 +79,7 @@ function nbinclude(m::Module, path::AbstractString;
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
             counter in counters && occursin(regex, s) || continue
-            ret = my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev)
+            ret = my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev, softscope)
             anshook(ret)
         end
     end
@@ -99,7 +98,7 @@ end
 const curmod_expr = VERSION >= v"0.7.0-DEV.481" ? :(@__MODULE__) : :(current_module())
 
 """
-    @nbinclude(path::AbstractString; renumber::Bool=false, counters=1:typemax(Int), regex::Regex=r"", anshook = identity)
+    @nbinclude(path::AbstractString; renumber::Bool=false, counters=1:typemax(Int), regex::Regex=r"", anshook = identity, softscope::Bool = false)
 
 Include the IJulia Jupyter notebook at `path` and execute the code
 cells (in the order that they appear in the file) in `m`, returning the
@@ -127,6 +126,8 @@ would include cells 1 to 10 from "notebook.ipynb" that contain comments like
 `# exec` or `# ExecuteMe` in the cell text.
 
 `anshook` can be used to execute a function on all the values returned in the cells.
+
+`softscope` toggles between the "hard" and "soft" scoping rules described in the README.
 
 See also `nbinclude(module, path; ...)` to include a notebook in a specified module.
 """
