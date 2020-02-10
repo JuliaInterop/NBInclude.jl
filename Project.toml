@@ -4,6 +4,7 @@ version = "2.2.0"
 
 [deps]
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+SoftGlobalScope = "b85f4697-e234-5449-a836-ec8e2f98b302"
 
 [compat]
 julia = "1"
