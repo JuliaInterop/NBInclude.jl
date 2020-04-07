@@ -8,7 +8,7 @@ SoftGlobalScope = "b85f4697-e234-5449-a836-ec8e2f98b302"
 
 [compat]
 julia = "1"
-JSON = "0.18,0.19,0.20,0.21"
+JSON = "0.18,0.19,0.20,0.21,1"
 SoftGlobalScope = "1"
 
 [extras]
