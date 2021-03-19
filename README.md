@@ -18,7 +18,7 @@ Key features of NBInclude are:
 
 * The path of the notebook is relative to the path of the current file (if any),
 and nested inclusions can use paths relative to the notebook, just as for `include`.
-* In a module, included notebooks work fine with [precompilation](http://docs.julialang.org/en/latest/manual/modules/#module-initialization-and-precompilation) in Julia 0.4 (and re-compilation is automatically triggered if the notebook changes).
+* In a module, included notebooks work fine with [precompilation](https://docs.julialang.org/en/v1/manual/modules/#Module-initialization-and-precompilation) in Julia (and re-compilation is automatically triggered if the notebook changes).
 * Code is associated with accurate line numbers (e.g. for backtraces when exceptions are thrown), in the form of `myfile.ipynb:In[N]:M` for line `M` in input cell `N` of the `myfile.ipynb` notebook.  Un-numbered cells (e.g. unevaluated cells) are given a number
 `+N` for the `N`-th nonempty cell in the notebook.  You can use `@nbinclude("myfile.ipynb", renumber=true)` to automatically renumber the cells in sequence (as if you had selected *Run All* from the Jupyter *Cell* menu), without altering the file.
 * The Julia `@__FILE__` macro returns `/path/to/myfile.ipynb:In[N]` for input cell `N`.
