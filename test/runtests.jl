@@ -5,7 +5,7 @@ using NBInclude, Test
     VERSION >= v"1.0.0" ? eval(:(@test_throws LoadError @nbinclude(joinpath("includes", "scoping.ipynb")))) : true
     @nbinclude(joinpath("includes", "scoping.ipynb"); softscope = true)
     @test a == 11
-end 
+end
 
 @test include(joinpath("includes", "test1.jl")) == 314159
 @test f(5) == 6
@@ -25,4 +25,6 @@ x=[]; @nbinclude("test2.ipynb"; counters = [1, 4, 5], regex=r"#.*executeme")
 @test x == [4]
 
 z = 0; @nbinclude("test2.ipynb"; anshook = x -> (global z += 1))
-@test z == 6
+@test z == 7
+
+@test !in_nbinclude()
