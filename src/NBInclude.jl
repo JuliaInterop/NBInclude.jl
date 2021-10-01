@@ -11,7 +11,7 @@ to include the Julia code from the notebook `myfile.ipynb`.  Like `include`,
 the value of the last evaluated expression is returned.
 """
 module NBInclude
-export nbinclude, @nbinclude
+export nbinclude, @nbinclude, in_nbinclude
 
 using JSON, SoftGlobalScope
 
@@ -35,6 +35,15 @@ function my_include_string(m::Module, s::AbstractString, path::AbstractString, p
         end
     end
 end
+
+"""
+    in_nbinclude()
+
+Returns `true` if run from code executed within an `@nbinclude`-ed notebook, and
+`false` otherwise.
+"""
+in_nbinclude() = get(Base.task_local_storage(), _in_nbinclude, false)::Bool
+const _in_nbinclude = :in_nbinclude_0db19996_df87_5ea3_a455_e3a50d440464 # unique symbol based on our UUID4
 
 """
     nbinclude(m::Module, path; ...)
@@ -79,7 +88,9 @@ function nbinclude(m::Module, path::AbstractString;
                       cell["execution_count"] == nothing ? string('+',counter) :
                       string(cell["execution_count"])
             counter in counters && occursin(regex, s) || continue
-            ret = my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev, softscope)
+            ret = Base.task_local_storage(_in_nbinclude, true) do
+                my_include_string(m, s, string(path, ":In[", cellnum, "]"), prev, softscope)
+            end
             anshook(ret)
         end
     end

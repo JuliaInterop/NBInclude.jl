@@ -2,16 +2,24 @@
 
 [![CI](https://github.com/stevengj/NBInclude.jl/workflows/CI/badge.svg)](https://github.com/stevengj/NBInclude.jl/actions?query=workflow%3ACI)
 
-NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.  That is, analogous to doing [`include("myfile.jl")`](http://docs.julialang.org/en/latest/stdlib/base/#Base.include) in Julia to execute `myfile.jl`, you can do
+NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.
+
+The goal of this package is to make notebook files just as easy to incorporate into Julia programs as ordinary Julia (`.jl`) files, giving you the advantages of a notebook (integrated code, formatted text, equations, graphics, and other results) while retaining the modularity and re-usability of `.jl` files.
+
+## Basic usage
+
+Analogous to [`include("myfile.jl")`](https://docs.julialang.org/en/v1/base/base/#Base.include) in Julia to execute `myfile.jl`, you can do
 ```jl
 using NBInclude
 @nbinclude("myfile.ipynb")
 ```
 to execute all of the code cells in the IJulia notebook `myfile.ipynb`. Similar to `include`, the value of the last evaluated expression in the last evaluated code cell is returned.
 
-The goal of this package is to make notebook files just as easy to incorporate into Julia programs as ordinary Julia (`.jl`) files, giving you the advantages of a notebook (integrated code, formatted text, equations, graphics, and other results) while retaining the modularity and re-usability of `.jl` files.
+We also export an `in_nbinclude()` function, which returns `true` only when it is
+executed in code run via `@nbinclude`.  Using this, you can selectively run code
+in a notebook only interactively or only via `@nbinclude`.
 
-Note: Scoping rules differ between interactive (IJulia, REPL) and non-interactive Julia code. Running a notebook as `@nbinclude("foo.ipynb"; softscope=true)` will load notebooks using "soft" global scoping similar to interactive (REPL) code in Julia 1.5+ or for IJulia with any Julia version. That flag's default value, `false`, will load notebooks with the "hard" scoping rule that Julia uses for non-interactive code (e.g. in `include`); see also the [SoftGlobalScope package](https://github.com/stevengj/SoftGlobalScope.jl) for more details.
+## Detailed features
 
 Key features of NBInclude are:
 
@@ -26,9 +34,9 @@ and nested inclusions can use paths relative to the notebook, just as for `inclu
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
 * A keyword `anshook` can be used to run a passed function on the return value of all the cells.
 * No Python or Jupyter dependency.
-* The `softscope` flag mentioned above.
+* The `softscope` flag mentioned below.
 
-To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.
+Note: Scoping rules differ between interactive (IJulia, REPL) and non-interactive Julia code. Running a notebook as `@nbinclude("foo.ipynb"; softscope=true)` will load notebooks using "soft" global scoping similar to interactive (REPL) code in Julia 1.5+ or for IJulia with any Julia version. That flag's default value, `false`, will load notebooks with the "hard" scoping rule that Julia uses for non-interactive code (e.g. in `include`); see also the [SoftGlobalScope package](https://github.com/stevengj/SoftGlobalScope.jl) for more details.
 
 ## Contact
 
