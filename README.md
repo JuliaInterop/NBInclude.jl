@@ -19,9 +19,16 @@ We also export an `in_nbinclude()` function, which returns `true` only when it i
 executed in code run via `@nbinclude`.  Using this, you can selectively run code
 in a notebook only interactively or only via `@nbinclude`.
 
+There is also a function
+```jl
+nbexport("myfile.jl", "myfile.ipynb")
+```
+that can be used to convert an IJulia notebook file to an ordinary Julia file, with
+Markdown text in the notebook converted to formatted comments in the Julia file.
+
 ## Detailed features
 
-Key features of NBInclude are:
+Key features of `@nbinclude` are:
 
 * The path of the notebook is relative to the path of the current file (if any),
 and nested inclusions can use paths relative to the notebook, just as for `include`.
@@ -37,6 +44,18 @@ would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# 
 * The `softscope` flag mentioned below.
 
 Note: Scoping rules differ between interactive (IJulia, REPL) and non-interactive Julia code. Running a notebook as `@nbinclude("foo.ipynb"; softscope=true)` will load notebooks using "soft" global scoping similar to interactive (REPL) code in Julia 1.5+ or for IJulia with any Julia version. That flag's default value, `false`, will load notebooks with the "hard" scoping rule that Julia uses for non-interactive code (e.g. in `include`); see also the [SoftGlobalScope package](https://github.com/stevengj/SoftGlobalScope.jl) for more details.
+
+Key features of `nbexport` are:
+
+* You can either call `nbexport(filename, notebookfile)` to export to a file, or
+  `nbexport(io, notebookfile)` to write to an `IO` stream (e.g. `stdout` or a buffer).
+* To export to a string, use `sprint(nbexport, notebookfile)`.
+* Like `@nbinclude`, you can pass a `regex` keyword to specify a subset of the notebook
+  code cells to export.
+* Markdown cells in the notebook are parsed and formatted as pretty-printed text comments
+  with the help of Julia's [Markdown](https://docs.julialang.org/en/v1/stdlib/Markdown/)
+  standard library.
+* Markdown cells can be ignored by passing `markdown=false` to `nbexport`.
 
 ## Contact
 
