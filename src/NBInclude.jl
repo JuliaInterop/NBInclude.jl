@@ -11,9 +11,10 @@ to include the Julia code from the notebook `myfile.ipynb`.  Like `include`,
 the value of the last evaluated expression is returned.
 """
 module NBInclude
-export nbinclude, @nbinclude, in_nbinclude
+export nbinclude, @nbinclude, in_nbinclude, nbexport
 
 using JSON, SoftGlobalScope
+import Markdown
 
 """
     my_include_string(m::Module, s::AbstractString, path::AbstractString, prev, softscope)
@@ -45,6 +46,8 @@ Returns `true` if run from code executed within an `@nbinclude`-ed notebook, and
 in_nbinclude() = get(Base.task_local_storage(), _in_nbinclude, false)::Bool
 const _in_nbinclude = :in_nbinclude_0db19996_df87_5ea3_a455_e3a50d440464 # unique symbol based on our UUID4
 
+const shell_or_help = r"^\s*[;?]" # pattern for shell command or help
+
 """
     nbinclude(m::Module, path; ...)
 
@@ -73,8 +76,6 @@ function nbinclude(m::Module, path::AbstractString;
     nb["nbformat"] == 4 || error("unrecognized notebook format ", nb["nbformat"])
     lang = lowercase(nb["metadata"]["language_info"]["name"])
     lang == "julia" || error("notebook is for unregognized language $lang")
-
-    shell_or_help = r"^\s*[;?]" # pattern for shell command or help
 
     ret = nothing
     counter = 0 # keep our own cell counter to handle un-executed notebooks.
@@ -166,5 +167,46 @@ macro nbinclude(args...)
     end
     return Expr(:call, :nbinclude, Expr(:parameters, kws...), args...)
 end
+
+function nbexport(io::IO, nbpath::AbstractString; regex::Regex = r"", markdown::Bool=true)
+    nb = open(JSON.parse, nbpath, "r")
+    separator = ""
+    for cell in nb["cells"]
+        if cell["cell_type"] == "code"
+            s = join(cell["source"])
+            isempty(strip(s)) && continue # Jupyter doesn't number empty cells
+            occursin(shell_or_help, s) && continue
+            occursin(regex, s) || continue
+            print(io, separator, s)
+            separator = "\n\n"
+        elseif markdown && cell["cell_type"] == "markdown"
+            md = Markdown.parse(join(cell["source"]))
+            print(io, separator, "# ", replace(repr("text/plain", md), '\n' => "\n# "))
+            separator = "\n\n"
+        end
+    end
+    return io
+end
+
+function nbexport(jlpath::AbstractString, nbpath::AbstractString; kws...)
+    open(io -> nbexport(io, nbpath; kws...), jlpath, "w")
+    return nothing
+end
+
+"""
+    nbexport(io, nbpath; regex=r"", markdown=true)
+    nbexport(output_filename, nbpath; regex=r"", markdown=true)
+
+Read the IJulia Jupyter notebook file `nbpath` and output it as ordinary
+Julia code to the `io` stream or to the `output_filename` file.
+
+Markdown cells in the notebook are parsed and converted to `# ...` comments,
+unless the `markdown` keyword argument is set to `false` (in which case
+Markdown cells are ignored).
+
+Similar to `@nbinclude`, code cells not matching the regular expression
+passed via the `regex` keyword are ignored.
+"""
+nbexport
 
 end # module

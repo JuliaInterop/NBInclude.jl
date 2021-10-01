@@ -28,3 +28,14 @@ z = 0; @nbinclude("test2.ipynb"; anshook = x -> (global z += 1))
 @test z == 7
 
 @test !in_nbinclude()
+
+let desired_output = "#   This is an example notebook:\n\nfunction f(x)\n    return x + 1\nend\n\nf(3)\n\n# comment\n\nconst myfile = @__FILE__\n\nconst myfile2 = @__FILE__\nf(314158)\n# comment",
+    test_ipynb = joinpath(@__DIR__, "test.ipynb"), outfilename = tempname()
+    @test sprint(nbexport, test_ipynb) == desired_output
+    try
+        nbexport(outfilename, test_ipynb)
+        @test read(outfilename, String) == desired_output
+    finally
+        rm(outfilename, force=true)
+    end
+end
