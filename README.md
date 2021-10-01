@@ -1,7 +1,6 @@
 # NBInclude
 
-[![Build Status](https://travis-ci.org/stevengj/NBInclude.jl.svg?branch=master)](https://travis-ci.org/stevengj/NBInclude.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/8kixdblpw5oi8nd3?svg=true)](https://ci.appveyor.com/project/StevenGJohnson/nbinclude-jl)
+[![CI](https://github.com/stevengj/NBInclude.jl/workflows/CI/badge.svg)](https://github.com/stevengj/NBInclude.jl/actions?query=workflow%3ACI)
 
 NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.  That is, analogous to doing [`include("myfile.jl")`](http://docs.julialang.org/en/latest/stdlib/base/#Base.include) in Julia to execute `myfile.jl`, you can do
 ```jl
@@ -27,7 +26,7 @@ and nested inclusions can use paths relative to the notebook, just as for `inclu
 would include cells 1 to 10 from `notebook.ipynb` that contain comments like `# EXECUTE`.
 * A keyword `anshook` can be used to run a passed function on the return value of all the cells.
 * No Python or Jupyter dependency.
-* The `softscope` flag mentioned above. 
+* The `softscope` flag mentioned above.
 
 To install it, simply do `Pkg.add("NBInclude")` as usual for Julia packages.
 
