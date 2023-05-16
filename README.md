@@ -1,6 +1,6 @@
 # NBInclude
 
-[![CI](https://github.com/stevengj/NBInclude.jl/workflows/CI/badge.svg)](https://github.com/stevengj/NBInclude.jl/actions?query=workflow%3ACI)
+[![CI](https://github.com/JuliaInterop/NBInclude.jl/workflows/CI/badge.svg)](https://github.com/JuliaInterop/NBInclude.jl/actions?query=workflow%3ACI)
 
 NBInclude is a package for the [Julia language](http://julialang.org/) which allows you to include and execute [IJulia](https://github.com/JuliaLang/IJulia.jl) (Julia-language [Jupyter](https://jupyter.org/)) notebook files just as you would include an ordinary Julia file.
 
