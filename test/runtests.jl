@@ -33,6 +33,9 @@ let desired_output = "#   This is an example notebook:\n\nfunction f(x)\n    ret
     test_ipynb = joinpath(@__DIR__, "test.ipynb"), outfilename = tempname()
     @test sprint(nbexport, test_ipynb) == desired_output
     try
+        # wrong arg order should not overwrite ipynb (#30):
+        @test_throws Exception nbexport(test_ipynb, outfilename)
+
         nbexport(outfilename, test_ipynb)
         @test read(outfilename, String) == desired_output
     finally
