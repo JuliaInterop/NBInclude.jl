@@ -168,8 +168,8 @@ macro nbinclude(args...)
     return Expr(:call, :nbinclude, Expr(:parameters, kws...), args...)
 end
 
-function nbexport(io::IO, nbpath::AbstractString; regex::Regex = r"", markdown::Bool=true)
-    nb = open(JSON.parse, nbpath, "r")
+# low-level nbexport function that takes in the `nb` Dict
+function _nbexport(io::IO, nb::AbstractDict, regex::Regex, markdown::Bool=true)
     separator = ""
     for cell in nb["cells"]
         if cell["cell_type"] == "code"
@@ -188,8 +188,16 @@ function nbexport(io::IO, nbpath::AbstractString; regex::Regex = r"", markdown::
     return io
 end
 
-function nbexport(jlpath::AbstractString, nbpath::AbstractString; kws...)
-    open(io -> nbexport(io, nbpath; kws...), jlpath, "w")
+function nbexport(io::IO, nbpath::AbstractString; regex::Regex = r"", markdown::Bool=true)
+    nb = open(JSON.parse, nbpath, "r")
+    return _nbexport(io, nb, regex, markdown)
+end
+
+function nbexport(jlpath::AbstractString, nbpath::AbstractString; regex::Regex = r"", markdown::Bool=true)
+    # parse the notebook file before overwriting the jlpath,
+    # to avoid overwriting files on errors (issue #30)
+    nb = open(JSON.parse, nbpath, "r")
+    open(io -> _nbexport(io, nb, regex, markdown), jlpath, "w")
     return nothing
 end
 
