@@ -168,7 +168,7 @@ macro nbinclude(args...)
     return Expr(:call, :nbinclude, Expr(:parameters, kws...), args...)
 end
 
-# low-level nbexport function that takes in the `nb` dictionary
+# low-level nbexport function that takes in the `nb` Dict
 function _nbexport(io::IO, nb::AbstractDict, regex::Regex, markdown::Bool=true)
     separator = ""
     for cell in nb["cells"]
